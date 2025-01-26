@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель бота</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .menu {
+            display: flex;
+            justify-content: space-around;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .menu a:hover {
+            background-color: #555;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Админ-панель бота</h1>
+        </div>
+        <div class="menu">
+            <a href="#stats">Статистика</a>
+            <a href="#users">Пользователи</a>
+            <a href="#ratings">Оценки</a>
+            <a href="#premium">Премиум</a>
+        </div>
+        <div class="content" id="stats">
+            <h2>Общая статистика</h2>
+            <p>Всего пользователей: <strong>{{ total_users }}</strong></p>
+            <p>Всего оценок: <strong>{{ total_ratings }}</strong></p>
+            <p>Новых пользователей за 24 часа: <strong>{{ new_users_last_24h }}</strong></p>
+            <p>Новых оценок за 24 часа: <strong>{{ new_ratings_last_24h }}</strong></p>
+        </div>
+        <div class="content" id="users" style="display: none;">
+            <h2>Топ пользователей</h2>
+            <ul>
+                {% for user in top_users %}
+                    <li>Пользователь {{ user['target_id'] }} - {{ user['rating_count'] }} оценок</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="content" id="ratings" style="display: none;">
+            <h2>Последние оценки</h2>
+            <ul>
+                {% for rating in last_ratings %}
+                    <li>Пользователь {{ rating['rater_id'] }} оценил Пользователя {{ rating['target_id'] }} ({{ rating['rating_time'] }})</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="content" id="premium" style="display: none;">
+            <h2>Премиум-статистика</h2>
+            <p>Всего премиум-пользователей: <strong>{{ premium_users }}</strong></p>
+            <p>Новых премиум-пользователей за 24 часа: <strong>{{ new_premium_last_24h }}</strong></p>
+        </div>
+        <div class="footer">
+            <p>© 2023 Админ-панель бота. Все права защищены.</p>
+        </div>
+    </div>
+
+    <script>
+        // Скрипт для переключения вкладок
+        document.querySelectorAll('.menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                document.querySelectorAll('.content').forEach(content => {
+                    content.style.display = 'none';
+                });
+                document.getElementById(targetId).style.display = 'block';
+            });
+        });
+
+        // По умолчанию показываем вкладку "Статистика"
+        document.getElementById('stats').style.display = 'block';
+    </script>
+</body>
+</html>
